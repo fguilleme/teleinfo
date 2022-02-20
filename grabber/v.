@@ -1,0 +1,10 @@
+[Unit]
+Description=Linky teleinfo grabber
+After=network.target
+
+[Service]
+ExecStart=/usr/local/bin/teleinfo
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
