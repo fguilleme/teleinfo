@@ -60,12 +60,13 @@ try:
         dt = dt.astimezone(tz.tzlocal())
 
         x, y = 0, 70
+        time_draw.rectangle((0, 20, epd.height-1, 90), fill=255) 
         w, h = drawText(time_draw, x, y, font18, f'PAPP ')
-        w1, h1 = drawText(time_draw, x, y, font72, f'{papp}', display=False)
-        drawText(time_draw, x+w, y+h-h1, font72, f' {papp}')
+        w1, h1 = drawText(time_draw, x, y, font72, f' {papp}', display=False)
+        drawText(time_draw, epd.height-w1-1, y+h-h1, font72, f'{papp} ')
 
         x, y = 0, 0
-        w, h = drawText(time_draw, x, y, font24, f'HC {round(hchc/1000, 1)}', display=False)
+        w, h = drawText(time_draw, x, y, font24, f'HC {round(hchc/1000, 1)}XX', display=False)
         w, h = drawText(time_draw, x, epd.width-h-4, font24, f'HC {round(hchc/1000, 1)}')
         w, _ = drawText(time_draw, x, y, font24, f'HP {round(hchp/1000,1)}', display=False)
         drawText(time_draw, epd.height-w-1, epd.width-h-4, font24, f'HP {round(hchp/1000,1)}')
@@ -85,12 +86,10 @@ try:
 
         epd.displayPartial(epd.getbuffer(time_image))
 
-        if False:
-            time_image.save('/tmp/linky.png')
-            break
+        time_image.save('/tmp/linky.png')
 
         num = num + 1
-        time.sleep(2)
+        time.sleep(4)
         if num == 3600:
             epd.init()
             epd.Clear(0xFF)
