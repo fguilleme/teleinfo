@@ -20,7 +20,7 @@ def drawText(im, x, y, f, txt, border=False, display=True):
     return w, h
 
 client = InfluxDBClient(host='localhost', port=8086)
-client.switch_database('teleinfo')
+client.switch_database('teleinfo2')
 
 logging.basicConfig(level=logging.INFO)
 exit_code=0
@@ -43,21 +43,21 @@ try:
     epd.displayPartBaseImage(epd.getbuffer(time_image))
     num = 0
     while (True):
-        res = client.query('SELECT value FROM PAPP, HCHC, HCHP WHERE time >= now()-1m LIMIT 1')
+        res = client.query('SELECT PAPP, HCHC, HCHP FROM teleinfo WHERE time >= now()-1m LIMIT 1')
         #logging.info(res)
         try:
-                dt = res.raw['series'][2]['values'][0][0]
-                papp = res.raw['series'][2]['values'][0][1]
-                hchc = res.raw['series'][0]['values'][0][1]
-                hchp = res.raw['series'][1]['values'][0][1]
+                dt = res.raw['series'][0]['values'][0][0]
+                papp = res.raw['series'][0]['values'][0][1]
+                hchc = res.raw['series'][0]['values'][0][2]
+                hchp = res.raw['series'][0]['values'][0][3]
+                dt = datetime.strptime(dt, '%Y-%m-%dT%H:%M:%SZ')
+                dt = dt.replace(tzinfo=tz.tzutc())
+                dt = dt.astimezone(tz.tzlocal())
         except:
                 papp = 0
                 hchc = 0
                 hchp = 0
-
-        dt = datetime.strptime(dt, '%Y-%m-%dT%H:%M:%SZ')
-        dt = dt.replace(tzinfo=tz.tzutc())
-        dt = dt.astimezone(tz.tzlocal())
+                dt = datetime.now()
 
         x, y = 0, 70
         time_draw.rectangle((0, 20, epd.height-1, 90), fill=255) 
